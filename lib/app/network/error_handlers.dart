@@ -21,17 +21,24 @@ Exception handleDioError(DioError dioError) {
   switch (dioError.type) {
     case DioErrorType.cancel:
       return AppException(message: "Request to API server was cancelled");
-    case DioErrorType.connectTimeout:
+    case DioErrorType.connectionTimeout:
       return AppException(message: "Connection timeout with API server");
-    case DioErrorType.other:
+    case DioErrorType.connectionError:
       return NetworkException("There is no internet connection");
     case DioErrorType.receiveTimeout:
       return TimeoutException("Receive timeout in connection with API server");
     case DioErrorType.sendTimeout:
       return TimeoutException("Send timeout in connection with API server");
-    case DioErrorType.response:
+    case DioErrorType.unknown:
       return _parseDioErrorResponse(dioError);
+    case DioErrorType.badCertificate:
+      // TODO: Handle this case.
+      break;
+    case DioErrorType.badResponse:
+      // TODO: Handle this case.
+      break;
   }
+  return AppException(message: "Something went wrong. Please try again later.");
 }
 
 Exception _parseDioErrorResponse(DioError dioError) {
